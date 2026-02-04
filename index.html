@@ -1,122 +1,60 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DSTV Processor</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-font-family:'Segoe UI',Tahoma,Verdana;
-background:linear-gradient(135deg,#667eea,#764ba2);
-min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px
-}
-.container{background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:40px;max-width:600px;width:100%}
-.login-container{display:block}
-.app-container{display:none}
-h1{text-align:center;color:#667eea;margin-bottom:10px}
-.subtitle{text-align:center;color:#999;margin-bottom:30px}
-.lock-icon{text-align:center;font-size:60px;margin-bottom:20px}
-.password-input-wrapper{position:relative}
-input{width:100%;padding:15px;border-radius:10px;border:2px solid #ddd;font-size:16px}
-.toggle-password{position:absolute;right:15px;top:50%;transform:translateY(-50%);cursor:pointer}
-button{
-background:linear-gradient(135deg,#667eea,#764ba2);
-color:#fff;border:none;padding:18px;border-radius:30px;
-font-size:18px;font-weight:bold;cursor:pointer;width:100%;margin-top:20px
-}
-.upload-area{border:3px dashed #667eea;border-radius:15px;padding:50px;text-align:center;background:#f8f9ff;cursor:pointer}
-.file-name{display:none;margin-top:15px;color:#667eea;font-weight:bold}
-.status{display:none;margin-top:20px;padding:15px;border-radius:10px;text-align:center}
-.status.success{background:#d4edda;color:#155724}
-.status.error{background:#f8d7da;color:#721c24}
-.status.processing{background:#fff3cd;color:#856404}
-.footer{text-align:center;margin-top:25px;color:#999;font-size:12px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSTV Processor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style> *{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;}.container{background:white;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);padding:40px;max-width:600px;width:100%;}.login-container{display:block;}.app-container{display:none;}h1{color:#667eea;text-align:center;margin-bottom:10px;font-size:32px;}.subtitle{text-align:center;color:#999;margin-bottom:30px;font-size:14px;}.lock-icon{text-align:center;font-size:60px;margin-bottom:20px;}.password-group{margin-bottom:20px;}.password-group label{display:block;margin-bottom:8px;color:#666;font-weight:500;}.password-input-wrapper{position:relative;}input[type="password"],input[type="text"]{width:100%;padding:15px;border:2px solid #ddd;border-radius:10px;font-size:16px;transition:all 0.3s ease;}input[type="password"]:focus,input[type="text"]:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,0.1);}.toggle-password{position:absolute;right:15px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:20px;user-select:none;}.upload-area{border:3px dashed #667eea;border-radius:15px;padding:50px 40px;text-align:center;transition:all 0.3s ease;cursor:pointer;background:#f8f9ff;}.upload-area:hover{border-color:#764ba2;background:#f0f2ff;transform:translateY(-2px);}.upload-area.dragover{border-color:#764ba2;background:#e8eaff;transform:scale(1.02);}#fileInput{display:none;}.upload-icon{font-size:60px;margin-bottom:15px;}.upload-text{color:#666;font-size:18px;margin-bottom:10px;font-weight:500;}.upload-subtext{color:#999;font-size:14px;}.file-name{color:#667eea;font-weight:bold;margin-top:20px;padding:10px 20px;background:#f0f2ff;border-radius:8px;display:none;}button{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border:none;padding:18px 40px;border-radius:30px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:25px;width:100%;transition:all 0.3s ease;box-shadow:0 5px 15px rgba(102,126,234,0.4);}button:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 10px 25px rgba(102,126,234,0.6);}button:active:not(:disabled){transform:translateY(-1px);}button:disabled{background:#ccc;cursor:not-allowed;box-shadow:none;}.logout-btn{background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);padding:12px 30px;font-size:14px;margin-top:15px;}.status{margin-top:25px;padding:18px;border-radius:12px;text-align:center;display:none;font-weight:500;}.status.success{background:#d4edda;color:#155724;border:2px solid #c3e6cb;}.status.error{background:#f8d7da;color:#721c24;border:2px solid #f5c6cb;}.status.processing{background:#fff3cd;color:#856404;border:2px solid #ffeaa7;}.loader{border:5px solid #f3f3f3;border-top:5px solid #667eea;border-radius:50%;width:50px;height:50px;animation:spin 1s linear infinite;margin:20px auto;display:none;}@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}.footer{text-align:center;margin-top:30px;color:#999;font-size:12px;}</style>
 </head>
-
 <body>
-<div class="container">
+    <div class="container">
+        <!-- Login Screen -->
+        <div class="login-container" id="loginContainer">
+            <h1>🔐 DSTV Processor</h1>
+            <div class="subtitle">Vui lòng đăng nhập để tiếp tục</div>
+            
+            <div class="lock-icon">🔒</div>
+            
+            <div class="password-group">
+                <label for="passwordInput">Mật khẩu</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="passwordInput" placeholder="Nhập mật khẩu...">
+                    <span class="toggle-password" id="togglePassword">👁️</span>
+                </div>
+            </div>
+            
+            <button id="loginBtn">Đăng Nhập</button>
+            
+            <div class="status" id="loginStatus"></div>
+            
+            <div class="footer">Made with ❤️ by SơnLâm</div>
+        </div>
+        
+        <!-- App Screen -->
+        <div class="app-container" id="appContainer">
+            <h1>🔄 DSTV Processor</h1>
+            <div class="subtitle">Tự động xử lý file Excel DSTV</div>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📊</div>
+                <div class="upload-text">Kéo thả file Excel vào đây</div>
+                <div class="upload-subtext">hoặc click để chọn file • Hỗ trợ .xlsx, .xls</div>
+                <div class="file-name" id="fileName"></div>
+            </div>
+            
+            <input type="file" id="fileInput" accept=".xlsx,.xls">
+            
+            <button id="processBtn" disabled>Xử Lý File</button>
+            <button class="logout-btn" id="logoutBtn">Đăng Xuất</button>
+            
+            <div class="loader" id="loader"></div>
+            <div class="status" id="status"></div>
+            
+            <div class="footer">Made with ❤️ by SơnLâm</div>
+        </div>
+    </div>
 
-<!-- LOGIN -->
-<div class="login-container" id="login">
-<h1>🔐 DSTV Processor</h1>
-<div class="subtitle">Vui lòng đăng nhập để tiếp tục</div>
-<div class="lock-icon">🔒</div>
-<div class="password-input-wrapper">
-<input type="password" id="pw" placeholder="Nhập mật khẩu">
-<span class="toggle-password" onclick="pw.type=pw.type==='password'?'text':'password'">👁️</span>
-</div>
-<button onclick="login()">Đăng Nhập</button>
-<div class="status" id="loginStatus"></div>
-<div class="footer">Made with ❤️ by SơnLâm</div>
-</div>
-
-<!-- APP -->
-<div class="app-container" id="app">
-
-<h1>🔄 DSTV Processor</h1>
-<div class="subtitle">Tự động xử lý file Excel DSTV</div>
-
-<div class="upload-area" onclick="file.click()">
-📊 Kéo thả hoặc click chọn file Excel
-<div class="file-name" id="fname"></div>
-</div>
-
-<input type="file" id="file" hidden accept=".xlsx,.xls">
-<button id="run" disabled>Xử Lý File</button>
-<button onclick="logout()">Đăng Xuất</button>
-
-<div class="status" id="status"></div>
-<div class="footer">Made with ❤️ by SơnLâm</div>
-
-</div>
-</div>
-
-<script>
-/* ===== LOGIN OBFUSCATED ===== */
-(function(){
-const k="bGFtbmVuaG9j"; // lamnenhoc
-window.login=function(){
-const v=document.getElementById("pw").value;
-if(btoa(v)===k){
-login.style.display="none";app.style.display="block";
-}else{
-loginStatus.className="status error";
-loginStatus.innerText="❌ Sai mật khẩu";
-loginStatus.style.display="block";
-}
-}
-window.logout=function(){
-app.style.display="none";login.style.display="block";pw.value="";
-}
-})();
-</script>
-
-<script>
-/* ===== APP GỐC – GIỮ NGUYÊN LOGIC XỬ LÝ FILE ===== */
-const file=document.getElementById("file");
-const fname=document.getElementById("fname");
-const run=document.getElementById("run");
-const status=document.getElementById("status");
-let selected=null;
-
-file.onchange=e=>{
-selected=e.target.files[0];
-fname.style.display="block";
-fname.innerText=selected.name;
-run.disabled=false;
-}
-
-run.onclick=()=>{
-status.className="status processing";
-status.innerText="⏳ Đang xử lý...";
-status.style.display="block";
-setTimeout(()=>status.className="status success",800);
-}
-</script>
-
+    <script>const _0xa1b2='d6b96776c5282ab301133de33c53c7bef6e5922a0ef23bbeb3967ef12e85c5b7';async function _0xc3d4(password){const msgBuffer=new TextEncoder().encode(password);const hashBuffer=await crypto.subtle.digest('SHA-256',msgBuffer);const hashArray=Array.from(new Uint8Array(hashBuffer));const hashHex=hashArray.map(b=>b.toString(16).padStart(2,'0')).join('');return hashHex;}const _0xe5f6=document.getElementById('loginContainer');const _0xg7h8=document.getElementById('appContainer');const _0xi9j0=document.getElementById('passwordInput');const _0xk1l2=document.getElementById('loginBtn');const _0xm3n4=document.getElementById('loginStatus');const _0xo5p6=document.getElementById('togglePassword');const _0xq7r8=document.getElementById('logoutBtn');_0xo5p6.addEventListener('click',()=>{const type=_0xi9j0.type==='password'?'text':'password';_0xi9j0.type=type;_0xo5p6.textContent=type==='password'?'👁️':'🙈';});_0xi9j0.addEventListener('keypress',(e)=>{if(e.key==='Enter'){_0xk1l2.click();}});_0xk1l2.addEventListener('click',async()=>{const password=_0xi9j0.value;if(!password){_0xs9t0('error','❌ Vui lòng nhập mật khẩu');return;}_0xs9t0('processing','⏳ Đang xác thực...');const hashedPassword=await _0xc3d4(password);if(hashedPassword===_0xa1b2){_0xs9t0('success','✅ Đăng nhập thành công!');setTimeout(()=>{_0xe5f6.style.display='none';_0xg7h8.style.display='block';},1000);}else{_0xs9t0('error','❌ Mật khẩu không đúng!');_0xi9j0.value='';_0xi9j0.focus();}});_0xq7r8.addEventListener('click',()=>{_0xg7h8.style.display='none';_0xe5f6.style.display='block';_0xi9j0.value='';_0xu1v2();});function _0xs9t0(type,message){_0xm3n4.className=`status ${type}`;_0xm3n4.textContent=message;_0xm3n4.style.display='block';}function _0xu1v2(){_0xm3n4.style.display='none';}const _0xw3x4=document.getElementById('uploadArea');const _0xy5z6=document.getElementById('fileInput');const _0xa7b8=document.getElementById('processBtn');const _0xc9d0=document.getElementById('fileName');const _0xe1f2=document.getElementById('status');const _0xg3h4=document.getElementById('loader');let _0xi5j6=null;_0xw3x4.addEventListener('click',()=>_0xy5z6.click());_0xy5z6.addEventListener('change',(e)=>{_0xk7l8(e.target.files[0]);});_0xw3x4.addEventListener('dragover',(e)=>{e.preventDefault();_0xw3x4.classList.add('dragover');});_0xw3x4.addEventListener('dragleave',()=>{_0xw3x4.classList.remove('dragover');});_0xw3x4.addEventListener('drop',(e)=>{e.preventDefault();_0xw3x4.classList.remove('dragover');_0xk7l8(e.dataTransfer.files[0]);});function _0xk7l8(file){if(!file)return;if(!file.name.match(/\.(xlsx|xls)$/)){_0xq3r4('error','❌ Vui lòng chọn file Excel(.xlsx hoặc .xls)');return;}_0xi5j6=file;_0xc9d0.textContent=`📄 ${file.name}`;_0xc9d0.style.display='block';_0xa7b8.disabled=false;_0xs5t6();}_0xa7b8.addEventListener('click',_0xm9n0);function _0xo1p2(str){if(!str)return '';return str.normalize('NFC');}function _0xm9n0(){if(!_0xi5j6)return;_0xq3r4('processing','⏳ Đang xử lý file... Vui lòng đợi');_0xg3h4.style.display='block';_0xa7b8.disabled=true;const reader=new FileReader();reader.onload=(e)=>{try{const data=new Uint8Array(e.target.result);const workbook=XLSX.read(data,{type:'array'});const firstSheet=workbook.Sheets[workbook.SheetNames[0]];let jsonData=XLSX.utils.sheet_to_json(firstSheet);const regex=/^DA.*|^RD.*|^RS.*|^ZT.*|^MC.*|^MR.*|^KG.*|^GA.*|^GC.*|^GD.*|^GE.*|^GW.*|^GF.*|^GZ.*|^WE.*|^WG.*|^MG.*|^MJ.*|^MF.*|^HA.*|^MD.*|^ME.*|^CA.*|^CM.*|^V0.*|^VA.*|^C5.*|^E0.*|^E1.*|^EA.*|^EP.*|^MA.*|^H0.*|^MS.*/i;jsonData=jsonData.filter(row=>{const labcode=row['Labcode']||'';return regex.test(labcode);});jsonData.sort((a,b)=>{const labcodeCompare=(a['Labcode']||'').localeCompare(b['Labcode']||'');if(labcodeCompare!==0)return labcodeCompare;return(b['Sample Type']||'').localeCompare(a['Sample Type']||'');});jsonData=jsonData.map(row=>{const newRow={};Object.keys(row).forEach(key=>{if(!['Testcode','Cardcode','No.'].includes(key)){newRow[key]=row[key];}});return newRow;});jsonData=jsonData.map(row=>{if(row['Handover Note']){row['Handover Note']=_0xo1p2(String(row['Handover Note']));}if(row['Cancer Note']){row['Cancer Note']=_0xo1p2(String(row['Cancer Note']));}return row;});jsonData=jsonData.map(row=>{const labcode=row['Labcode']||'';const handoverNote=row['Handover Note']||'';const hasTru=/trữ|tru/i.test(handoverNote);let priority=-100;if(/^E[1|0]|^EP|^EA/.test(labcode))priority=3;else if(/^MA/.test(labcode))priority=2;else if(/^C5/.test(labcode))priority=1;else if(/^CA|^CM/.test(labcode))priority=0;else if(/^RD|^RS|^DA/.test(labcode))priority=-1;else if(/^MD|^ME|^MS/.test(labcode))priority=-2;else if(/^HA|^H0/.test(labcode))priority=-3;else if(/^ZT/.test(labcode))priority=-4;else if(/^GW|^GZ|^GD|^KG|^GE|^GF/.test(labcode))priority=-5;else if(/^GA/.test(labcode))priority=-6;else if(/^GC/.test(labcode))priority=-7;else if(/^WE|^WG/.test(labcode))priority=-8;else if(/^MJ|^MG/.test(labcode))priority=-9;else if(/^MC|^MR/.test(labcode))priority=-11;else if(/^MF/.test(labcode))priority=-13;if(/^M[CR](?![AG])/.test(labcode))priority=-10;if(/^MF(?![AG])/.test(labcode))priority=-12;if(hasTru)priority=4;row['_priority']=priority;return row;});jsonData.sort((a,b)=>{if(a['_priority']!==b['_priority']){return b['_priority']-a['_priority'];}return(a['Labcode']||'').localeCompare(b['Labcode']||'');});jsonData=jsonData.map(row=>{delete row['_priority'];return row;});jsonData=jsonData.map((row,index)=>{const labcode=row['Labcode']||'';const sampleType=row['Sample Type']||'';const newRow={'STT':index+1,'Labcode':labcode,'Note':'','Note 2':''};if(/^M[CRGFJ](?![AG])|^MG|^MJ/.test(labcode)){newRow['Note']='Ultrashear';}if(/^WE|^WG/.test(labcode)){newRow['Note']='USE 1V LIB';}if(/Ống máu/.test(sampleType))newRow['Note 2']='';else if(/Dịch ối không nuôi cấy/.test(sampleType))newRow['Note 2']='ối';else if(/Dịch ối đã nuôi cấy/.test(sampleType))newRow['Note 2']='ối nc';else if(/Máu ống Streck/.test(sampleType))newRow['Note 2']='';else if(/Mô \(Epp\)/.test(sampleType))newRow['Note 2']='';else if(/Dịch màng phổi/.test(sampleType))newRow['Note 2']='dmp';else if(/Gai nhau không nuôi cấy/.test(sampleType))newRow['Note 2']='gai';else if(/Mô gai nhau/.test(sampleType))newRow['Note 2']='gai';else if(/^Gai nhau/.test(sampleType))newRow['Note 2']='gai' else if(/gDNA/.test(sampleType))newRow['Note 2']='gDNA';else if(/^Phết/.test(sampleType))newRow['Note 2']='bs';else if(/Mô thai sảy/.test(sampleType))newRow['Note 2']='mts';Object.keys(row).forEach(key=>{if(key!=='Labcode'){newRow[key]=row[key];}});return newRow;});const newWorkbook=XLSX.utils.book_new();const newWorksheet=XLSX.utils.json_to_sheet(jsonData);XLSX.utils.book_append_sheet(newWorkbook,newWorksheet,'DSTV');const outputFileName='DSTV_lam.xlsx';XLSX.writeFile(newWorkbook,outputFileName);_0xq3r4('success',`✅ Thành công!Đã tải xuống:${outputFileName}`);_0xg3h4.style.display='none';_0xa7b8.disabled=false;}catch(error){console.error('Processing error:',error);_0xq3r4('error',`❌ Lỗi khi xử lý:${error.message}`);_0xg3h4.style.display='none';_0xa7b8.disabled=false;}};reader.onerror=()=>{_0xq3r4('error','❌ Lỗi khi đọc file');_0xg3h4.style.display='none';_0xa7b8.disabled=false;};reader.readAsArrayBuffer(_0xi5j6);}function _0xq3r4(type,message){_0xe1f2.className=`status ${type}`;_0xe1f2.textContent=message;_0xe1f2.style.display='block';}function _0xs5t6(){_0xe1f2.style.display='none';}</script>
 </body>
 </html>
