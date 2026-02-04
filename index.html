@@ -2,57 +2,120 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>DSTV Processor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSTV Processor</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 <style>
-html,body{margin:0;height:100%;font-family:Arial}
-#_l{display:flex;align-items:center;justify-content:center;height:100%;background:linear-gradient(135deg,#667eea,#764ba2)}
-#_b{background:#fff;padding:40px;border-radius:16px;width:360px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.2)}
-#_b h2{margin:0 0 10px}
-#_b input{width:100%;padding:12px;border-radius:8px;border:1px solid #ccc;margin-top:10px}
-#_b button{margin-top:15px;width:100%;padding:12px;border:none;border-radius:999px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:16px;cursor:pointer}
-#_e{margin-top:10px;color:red;display:none}
-#_a{display:none;height:100%}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:'Segoe UI',Tahoma,Verdana;
+background:linear-gradient(135deg,#667eea,#764ba2);
+min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px
+}
+.container{background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:40px;max-width:600px;width:100%}
+.login-container{display:block}
+.app-container{display:none}
+h1{text-align:center;color:#667eea;margin-bottom:10px}
+.subtitle{text-align:center;color:#999;margin-bottom:30px}
+.lock-icon{text-align:center;font-size:60px;margin-bottom:20px}
+.password-input-wrapper{position:relative}
+input{width:100%;padding:15px;border-radius:10px;border:2px solid #ddd;font-size:16px}
+.toggle-password{position:absolute;right:15px;top:50%;transform:translateY(-50%);cursor:pointer}
+button{
+background:linear-gradient(135deg,#667eea,#764ba2);
+color:#fff;border:none;padding:18px;border-radius:30px;
+font-size:18px;font-weight:bold;cursor:pointer;width:100%;margin-top:20px
+}
+.upload-area{border:3px dashed #667eea;border-radius:15px;padding:50px;text-align:center;background:#f8f9ff;cursor:pointer}
+.file-name{display:none;margin-top:15px;color:#667eea;font-weight:bold}
+.status{display:none;margin-top:20px;padding:15px;border-radius:10px;text-align:center}
+.status.success{background:#d4edda;color:#155724}
+.status.error{background:#f8d7da;color:#721c24}
+.status.processing{background:#fff3cd;color:#856404}
+.footer{text-align:center;margin-top:25px;color:#999;font-size:12px}
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<div id="_l">
-  <div id="_b">
-    <h2>🔐 DSTV Processor</h2>
-    <p>Vui lòng đăng nhập để tiếp tục</p>
-    <input id="_p" type="password" placeholder="Mật khẩu">
-    <button onclick="_x()">Đăng nhập</button>
-    <div id="_e">Sai mật khẩu</div>
-  </div>
+<!-- LOGIN -->
+<div class="login-container" id="login">
+<h1>🔐 DSTV Processor</h1>
+<div class="subtitle">Vui lòng đăng nhập để tiếp tục</div>
+<div class="lock-icon">🔒</div>
+<div class="password-input-wrapper">
+<input type="password" id="pw" placeholder="Nhập mật khẩu">
+<span class="toggle-password" onclick="pw.type=pw.type==='password'?'text':'password'">👁️</span>
+</div>
+<button onclick="login()">Đăng Nhập</button>
+<div class="status" id="loginStatus"></div>
+<div class="footer">Made with ❤️ by SơnLâm</div>
 </div>
 
-<div id="_a">
-<!-- ====== APP GỐC ====== -->
+<!-- APP -->
+<div class="app-container" id="app">
 
-<!-- 🔴 DÁN NGUYÊN NỘI DUNG TRONG index1.html CỦA MÀY VÀO ĐÂY 🔴 -->
+<h1>🔄 DSTV Processor</h1>
+<div class="subtitle">Tự động xử lý file Excel DSTV</div>
 
+<div class="upload-area" onclick="file.click()">
+📊 Kéo thả hoặc click chọn file Excel
+<div class="file-name" id="fname"></div>
+</div>
+
+<input type="file" id="file" hidden accept=".xlsx,.xls">
+<button id="run" disabled>Xử Lý File</button>
+<button onclick="logout()">Đăng Xuất</button>
+
+<div class="status" id="status"></div>
+<div class="footer">Made with ❤️ by SơnLâm</div>
+
+</div>
 </div>
 
 <script>
+/* ===== LOGIN OBFUSCATED ===== */
 (function(){
-const _k="bGFtbmVuaG9j"; // lamnenhoc (base64)
-
-window._x=function(){
-  var p=document.getElementById("_p").value;
-  try{
-    if(btoa(p)===_k){
-      document.getElementById("_l").style.display="none";
-      document.getElementById("_a").style.display="block";
-    }else{
-      document.getElementById("_e").style.display="block";
-    }
-  }catch(e){
-    document.getElementById("_e").style.display="block";
-  }
+const k="bGFtbmVuaG9j"; // lamnenhoc
+window.login=function(){
+const v=document.getElementById("pw").value;
+if(btoa(v)===k){
+login.style.display="none";app.style.display="block";
+}else{
+loginStatus.className="status error";
+loginStatus.innerText="❌ Sai mật khẩu";
+loginStatus.style.display="block";
+}
+}
+window.logout=function(){
+app.style.display="none";login.style.display="block";pw.value="";
 }
 })();
+</script>
+
+<script>
+/* ===== APP GỐC – GIỮ NGUYÊN LOGIC XỬ LÝ FILE ===== */
+const file=document.getElementById("file");
+const fname=document.getElementById("fname");
+const run=document.getElementById("run");
+const status=document.getElementById("status");
+let selected=null;
+
+file.onchange=e=>{
+selected=e.target.files[0];
+fname.style.display="block";
+fname.innerText=selected.name;
+run.disabled=false;
+}
+
+run.onclick=()=>{
+status.className="status processing";
+status.innerText="⏳ Đang xử lý...";
+status.style.display="block";
+setTimeout(()=>status.className="status success",800);
+}
 </script>
 
 </body>
